@@ -34,7 +34,7 @@ def run():
                 controller.turn = "black"
                 controller.getSandwiches(tile)
                 
-                controller.flip(tile) 
+                controller.flip2(tile) 
                 ## tile2 = 27
                 ##controller.flip(tile2)
                 ##new = Piece("black", tiles[tile2].getCenter(), win, tile2)
@@ -44,7 +44,8 @@ def run():
                 controller.changeTurn()
                 new = Piece("black", tiles[tile].getCenter(), win, tile)
                 controller.pieces.append(new)
-                moves = controller.validMoves()
+                tiles[tile].occupy("black")
+                #moves = controller.validMoves()
         
         scores_moves = {}
         movesNew = getMoves(controller.getPieces(), "white")
@@ -71,6 +72,7 @@ def run():
         
         controller.getSandwiches(AI_move)
         controller.changeTurn()
+        tiles[AI_move].occupy("white")
         ##new = Piece("white", tiles[tile].getCenter(), win, tile)
         ##controller.pieces.append(new)              
         ##new.draw()

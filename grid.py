@@ -471,12 +471,15 @@ class Controller():
             
             piece2.undraw()
             piece2.color = self.turn
+            #self.tiles[tile].resident = self.turn
+            self.tiles[tile].occupy(self.turn)  
             if piece2.color == 'white':
                 piece2.path = "white-tile.png"
             elif piece2.color == 'black':
                 piece2.path = "black-tile.png"
             piece2.image = Image(piece2.position, piece2.path)
             piece2.draw()
+            
             
             #new = Piece(self.turn, self.tiles[tile].getCenter(), self.win, tile)
             #new.draw()
@@ -515,6 +518,48 @@ class Controller():
 
             new = Piece(self.turn, self.tiles[tile].getCenter(), self.win, tile)
             new.draw()
+            self.tiles[tile].resident = self.turn
+
+    def flip2(self, tile) -> None: 
+        
+        if(self.tiles[tile].resident == "black"):
+            new = Piece("white", self.tiles[tile].getCenter(), self.win, tile)
+            new.draw()
+        elif(self.tiles[tile].resident == "white"):
+            new = Piece("black", self.tiles[tile].getCenter(), self.win, tile)
+            new.draw()
+        else:
+            new = Piece(self.turn, self.tiles[tile].getCenter(), self.win, tile)
+            new.draw()
+            self.tiles[tile].resident = self.turn
+
+        """Visually add/remove pieces from the board"""
+
+        moves = self.validMoves()
+
+        blackMoves = moves[0]
+
+        whiteMoves = moves[1]
+
+        if tile in blackMoves and self.turn == "black": 
+
+            old = self.tiles[tile].getResident()
+
+            if old != None: old.undraw()
+
+            new = Piece(self.turn, self.tiles[tile].getCenter(), self.win, tile)
+            new.draw()
+
+
+        elif tile in whiteMoves and self.turn == "white":  # same thing - make this into one method 
+
+            old = self.tiles[tile].getResident()
+
+            if old != None: old.undraw()
+
+            new = Piece(self.turn, self.tiles[tile].getCenter(), self.win, tile)
+            new.draw()
+            self.tiles[tile].resident = self.turn
 
 
     def changeTurn(self) -> None: 
