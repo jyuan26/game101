@@ -385,13 +385,10 @@ class Controller():
             for piece in self.pieces:
                 if piece.pos == tile:
                     piece2 = piece
-                    #piece.undraw()
-                    #self.pieces.remove(piece)
                     break
             
             piece2.undraw()
             piece2.color = self.turn
-            #self.tiles[tile].resident = self.turn
             self.tiles[tile].occupy(self.turn)  
             if piece2.color == 'white':
                 piece2.path = "white-tile.png"
@@ -399,11 +396,6 @@ class Controller():
                 piece2.path = "black-tile.png"
             piece2.image = Image(piece2.position, piece2.path)
             piece2.draw()
-            
-            
-            #new = Piece(self.turn, self.tiles[tile].getCenter(), self.win, tile)
-            #new.draw()
-            #self.flip(tile)
 
         return self.blackMoves if current_color == "black" else self.whiteMoves
 
@@ -471,7 +463,6 @@ class Controller():
         """
         Switch the current player's turn.
         """
-        # if self.turn == None: self.turn = "black"
         if self.turn == None or self.turn == "white":
             self.turn = "black"
         elif self.turn == "black":
@@ -529,21 +520,7 @@ def oppositeColor(color):
     if color == "black": return "white"
     elif color == "white": return "black"
 
-def get_best_move(board, valid_moves, color):
-    """
-    Find the best move for the AI to make (currently unused).
-    
-    Args:
-        board: Current state of the board
-        valid_moves: List of valid move positions
-        color: Color of the player making the move
-        
-    Returns:
-        The best move position index (0-63)
-    """
-    # This would presumably connect to the actual AI logic in OthelloAI.py
-    # but the implementation is missing
-    return valid_moves[0]  # Default to first valid move
+
 
 def main():
     """
