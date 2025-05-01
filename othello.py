@@ -109,13 +109,21 @@ def run():
                     
                     controller.changeTurn()
                     new = Piece(oppositeColor(AIColor), tiles[tile].getCenter(), win, tile)
+                    new.draw()
                     controller.pieces.append(new)
                     tiles[tile].occupy(oppositeColor(AIColor))
                     
                     # Update move text after human's move
                     moveText.setText(f"Current Move: {controller.turn.capitalize()}")
+
             
             controller.unmarkall()
+                                
+            # Display move complete message and wait for click to continue
+            statusText.setText("Move complete. Click anywhere to continue to AI move.")
+            win.getMouse()
+            statusText.setText("")
+            
             scores_moves = {}
             movesNew = getMoves(controller.getPieces(), AIColor)
             
@@ -292,6 +300,11 @@ def run():
                     
                     # Update move text after human's move
                     moveText.setText(f"Current Move: {controller.turn.capitalize()}")
+                    
+                    # Display move complete message and wait for click to continue
+                    statusText.setText("Move complete. Click anywhere to continue to AI move.")
+                    win.getMouse()
+                    statusText.setText("")
             
             controller.unmarkall()
             
