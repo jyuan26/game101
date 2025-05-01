@@ -2,6 +2,17 @@ import math
 from piece import Piece
         
 def avg_distance(x, y, board, color):
+    """
+    Calculate the average distance between a position (x,y) and all pieces of a specified color.
+    
+    Args:
+        x, y: Coordinates of the position to calculate distance from
+        board: List of all pieces on the board
+        color: The color of pieces to measure distance to
+        
+    Returns:
+        Average euclidean distance to all pieces of the specified color
+    """
     count = 0 
     total_dist = 0
     for piece in board:
@@ -16,17 +27,47 @@ def avg_distance(x, y, board, color):
     return average
 
 def avg_dist_from_center(board, color):
+    """
+    Calculate the average distance of all pieces of a color from their center of mass.
+    
+    Args:
+        board: List of all pieces on the board
+        color: Color of pieces to calculate the average distance for
+        
+    Returns:
+        Average distance of pieces from their collective center
+    """
     center_x, center_y = getCenter(board, color)
     avg_dist = avg_distance(center_x, center_y, board, color)
     return avg_dist
 
 def board_pos(board, x, y):
+    """
+    Get the piece at a specific board position.
+    
+    Args:
+        board: List of all pieces on the board
+        x, y: Coordinates to check
+        
+    Returns:
+        The piece object at position (x,y) or 0 if the space is empty
+    """
     for piece in board:
         if piece.getX() == x and piece.getY() == y:
             return piece
     return 0  # Empty space
 
 def getMoves(board, color):
+    """
+    Get all valid moves for a specified color.
+    
+    Args:
+        board: List of all pieces on the board
+        color: Color for which to find valid moves
+        
+    Returns:
+        List of (x,y) tuples representing valid move positions
+    """
     directions = [(1, 1), (1, 0), (1, -1), (0, 1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]
     opponent_color = 'white' if color == 'black' else 'black'
     valid_moves = set()
@@ -58,6 +99,18 @@ def getMoves(board, color):
     return list(valid_moves)
                 
 def move(board, x, y, color, win):
+    """
+    Simulate making a move at position (x,y) and return the resulting board state.
+    
+    Args:
+        board: Current state of the board
+        x, y: Coordinates of the move
+        color: Color making the move
+        win: Graphics window object
+        
+    Returns:
+        New board state after making the move (without modifying the original)
+    """
     gridx = x * 75 + 400
     gridy = y * 75 + 175
     directions = [(1, 1), (1, 0), (1, -1), (0, 1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]
@@ -67,10 +120,11 @@ def move(board, x, y, color, win):
     new_board = [Piece(p.getColor(), (p.getX(), p.getY()), win, p.pos) for p in board]
 
     # Add the new piece at (x, y) using win and a placeholder pos (could be computed if needed)
-    # For simplicity, we’ll just assume pos = (x, y) unless pos is strictly needed for rendering
+    # For simplicity, we'll just assume pos = (x, y) unless pos is strictly needed for rendering
     new_piece = Piece(color, (gridx, gridy), win, 8 * y + x)  # or whatever default works for your pos
     new_board.append(new_piece)
 
+    # Check in all 8 directions for pieces to flip
     for dx, dy in directions:
         cx, cy = x + dx, y + dy
         path = []
@@ -94,6 +148,22 @@ def move(board, x, y, color, win):
     return new_board
 
 def weighted_score(x, y, board, discs, color, win):
+    """
+    Calculate a weighted score for a move at position (x,y).
+    
+    The weights for different score components (flipping, utility, clumping) 
+    vary based on the game phase (early, mid, late).
+    
+    Args:
+        x, y: Coordinates of the potential move
+        board: Current state of the board
+        discs: Number of discs currently on the board
+        color: Color making the move
+        win: Graphics window object
+        
+    Returns:
+        Total weighted score for the move
+    """
     if discs <= 20:
         #early game favors gaining corners, stable pieces, and positioning.
         #High utility weight, very low flipping weight and low clumping weight
@@ -120,6 +190,20 @@ def weighted_score(x, y, board, discs, color, win):
     return total_score
     
 def stable(x, y, board, color):
+    """
+    Determine if a piece at position (x,y) would be stable.
+    
+    A piece is considered stable if it cannot be flipped in future moves.
+    This checks all directions to see if the piece is locked in place.
+    
+    Args:
+        x, y: Coordinates to check for stability
+        board: Current state of the board
+        color: Color of the piece to check
+        
+    Returns:
+        Boolean indicating if the position is stable
+    """
     #checks if square is "stable"
     #in the up/down, 2 diagonals, and left/right directions, if there are
     #empty spaces in both directions or an opponent piece in one direction
@@ -183,6 +267,16 @@ def stable(x, y, board, color):
     return True
 
 def getCenter(board, color):
+    """
+    Calculate the center of mass for all pieces of a specific color.
+    
+    Args:
+        board: List of all pieces on the board
+        color: Color for which to calculate the center
+        
+    Returns:
+        Tuple (center_x, center_y) representing the center of mass
+    """
     xsum = 0
     ysum = 0
     disc_count = 0
@@ -199,6 +293,24 @@ def getCenter(board, color):
     return center_x, center_y
 
 def utility(board, x, y, color):
+    """
+    Calculate the utility score for a position based on strategic value.
+    
+    Different positions on the board have different strategic values:
+    - Corners are extremely valuable (100 pts)
+    - Stable pieces are very valuable (80 pts)
+    - Center squares are moderately valuable (20 pts)
+    - Squares diagonally adjacent to corners are bad (0 pts)
+    - Other positions have medium value (25 pts)
+    
+    Args:
+        board: Current state of the board
+        x, y: Position to evaluate
+        color: Color making the move
+        
+    Returns:
+        Utility score for the position
+    """
     opp_color = 0
     if color == "black":
         opp_color = "white"
@@ -228,6 +340,16 @@ def utility(board, x, y, color):
     return score
 
 def count_corners(board, color):
+    """
+    Count the number of corners occupied by pieces of a specific color.
+    
+    Args:
+        board: List of all pieces on the board
+        color: Color of pieces to count
+        
+    Returns:
+        Number of corners occupied by the specified color
+    """
     corners = 0
     for disc in board:
         if disc.getX() in [0, 7] and disc.getY() in [0, 7] and disc.getColor() == color:
@@ -236,9 +358,36 @@ def count_corners(board, color):
     return corners
 
 def count_discs(board, color):
+    """
+    Count the number of discs of a specific color on the board.
+    
+    Args:
+        board: List of all pieces on the board
+        color: Color of pieces to count
+        
+    Returns:
+        Number of discs of the specified color
+    """
     return sum(1 for disc in board if disc.getColor() == color)
 
 def score(before_board, x, y, color, win):
+    """
+    Calculate the composite score for a move by simulating the move and potential opponent responses.
+    
+    This evaluates:
+    - Flip score: How many discs remain after the opponent's best counter-move
+    - Utility score: Strategic value of the position
+    - Distance score: How well the move fits with the current piece formation
+    
+    Args:
+        before_board: Current state of the board
+        x, y: Position of the potential move
+        color: Color making the move
+        win: Graphics window object
+        
+    Returns:
+        Tuple of (flip_score, utility_score, distance_score)
+    """
     if color == "white":
         opp_color = "black"
     else:
