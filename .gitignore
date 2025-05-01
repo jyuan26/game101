@@ -1,0 +1,20 @@
+# Python virtual environment
+.venv/
+
+# Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Local development settings
+.env
+.idea/
+.vscode/
+
+# OS generated files
+.DS_Store 
