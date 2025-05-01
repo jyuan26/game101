@@ -14,6 +14,12 @@ def convert(number):
     row = number // 8
     col = number - 8 * row
     return row, col
+
+def oppositeColor(color):
+    if color == "black":
+        return "white"
+    else:
+        return "black"
     
 def run(): 
     # setup
@@ -24,87 +30,171 @@ def run():
     quitButton = Button(Point(100,700), 75, 50, "Quit") 
     quitButton.draw(win)
     controller.validMoves()
-    w = weighted_score(2, 3, controller.getPieces(), 4, "black", win)
+    #w = weighted_score(2, 3, controller.getPieces(), 4, "black", win)
     # while loop
     discs = 4
-    while True: 
-        pt = win.getMouse()
+    AIColor = "black"
+    if AIColor == "white":
+        while True: 
+            pt = win.getMouse()
 
 
-        for tile in tiles: 
-            if tiles[tile].clicked(pt):
-                controller.turn = "black"
-                controller.getSandwiches(tile)
-                
-                controller.flip2(tile) 
-                ## tile2 = 27
-                ##controller.flip(tile2)
-                ##new = Piece("black", tiles[tile2].getCenter(), win, tile2)
-                ##new.draw()
-                
-                
-                controller.changeTurn()
-                new = Piece("black", tiles[tile].getCenter(), win, tile)
-                controller.pieces.append(new)
-                tiles[tile].occupy("black")
-                #moves = controller.validMoves()
-        
-        controller.unmarkall()
-        scores_moves = {}
-        movesNew = getMoves(controller.getPieces(), "white")
-        
-        ##for move in moves[1]:
-        for move in movesNew:
-            movex = move[0]
-            movey = move[1]
+            for tile in tiles: 
+                if tiles[tile].clicked(pt):
+                    controller.turn = oppositeColor(AIColor)
+                    controller.getSandwiches(tile)
+                    
+                    controller.flip2(tile) 
+                    ## tile2 = 27
+                    ##controller.flip(tile2)
+                    ##new = Piece("black", tiles[tile2].getCenter(), win, tile2)
+                    ##new.draw()
+                    
+                    
+                    controller.changeTurn()
+                    new = Piece(oppositeColor(AIColor), tiles[tile].getCenter(), win, tile)
+                    controller.pieces.append(new)
+                    tiles[tile].occupy(oppositeColor(AIColor))
+                    #moves = controller.validMoves()
             
-            movepos = movey * 8 + movex
-            print(movex, movey)
-            w = weighted_score(movex, movey, controller.getPieces(), discs, "white", win) 
-            scores_moves[movepos] = w
+            controller.unmarkall()
+            scores_moves = {}
+            movesNew = getMoves(controller.getPieces(), AIColor)
             
-        max_score = max(scores_moves.values())
-        AI_move = [move for move, score in scores_moves.items() if score == max_score][0]
-        #controller.turn = "white"
-        
-        ##controller.flip(AI_move)
-        new = Piece("white", tiles[AI_move].getCenter(), win, AI_move)
-        controller.pieces.append(new)              
-        new.draw()
-        ##controller.pieces.append(new)
-        
-        controller.getSandwiches(AI_move)
-        controller.changeTurn()
-        tiles[AI_move].occupy("white")
-        ##new = Piece("white", tiles[tile].getCenter(), win, tile)
-        ##controller.pieces.append(new)              
-        ##new.draw()
-        
-        ##max_score = -100000.0
-        ##for score in list(scores_moves.keys()):
-        ##    if score > max_score:
-        ##        max_score = score
-
-        ##AI_move = scores_moves[max_score]
-        
-        AImovex, AImovey = convert(AI_move)
-        gridx = AImovex * 75 + 400
-        gridy = AImovey * 75 + 175
-        print(scores_moves)
-        print(AImovex, AImovey, max_score)
-        
-        #moves = controller.validMoves()
-        movesBlack = getMoves(controller.getPieces(), "black")
-        for move in movesBlack:
-            movex = move[0]
-            movey = move[1]
+            ##for move in moves[1]:
+            for move in movesNew:
+                movex = move[0]
+                movey = move[1]
+                
+                movepos = movey * 8 + movex
+                print(movex, movey)
+                w = weighted_score(movex, movey, controller.getPieces(), discs, AIColor, win) 
+                scores_moves[movepos] = w
+                
+            max_score = max(scores_moves.values())
+            AI_move = [move for move, score in scores_moves.items() if score == max_score][0]
+            #controller.turn = "white"
             
-            movepos = movey * 8 + movex
-            tiles[movepos].mark()
-        
-        if quitButton.clicked(pt): break
+            ##controller.flip(AI_move)
+            new = Piece(AIColor, tiles[AI_move].getCenter(), win, AI_move)
+            controller.pieces.append(new)              
+            new.draw()
+            ##controller.pieces.append(new)
+            
+            controller.getSandwiches(AI_move)
+            controller.changeTurn()
+            tiles[AI_move].occupy(AIColor)
+            ##new = Piece("white", tiles[tile].getCenter(), win, tile)
+            ##controller.pieces.append(new)              
+            ##new.draw()
+            
+            ##max_score = -100000.0
+            ##for score in list(scores_moves.keys()):
+            ##    if score > max_score:
+            ##        max_score = score
 
-        discs += 1
+            ##AI_move = scores_moves[max_score]
+            
+            AImovex, AImovey = convert(AI_move)
+            gridx = AImovex * 75 + 400
+            gridy = AImovey * 75 + 175
+            print(scores_moves)
+            print(AImovex, AImovey, max_score)
+            
+            #moves = controller.validMoves()
+            movesBlack = getMoves(controller.getPieces(), oppositeColor(AIColor))
+            for move in movesBlack:
+                movex = move[0]
+                movey = move[1]
+                
+                movepos = movey * 8 + movex
+                tiles[movepos].mark()
+            
+            if quitButton.clicked(pt): break
+
+            discs += 1
+    else:
+        while True: 
+            controller.turn = AIColor
+            scores_moves = {}
+            movesNew = getMoves(controller.getPieces(), AIColor)
+            
+            ##for move in moves[1]:
+            for move in movesNew:
+                movex = move[0]
+                movey = move[1]
+                
+                movepos = movey * 8 + movex
+                print(movex, movey)
+                w = weighted_score(movex, movey, controller.getPieces(), discs, AIColor, win) 
+                scores_moves[movepos] = w
+                
+            max_score = max(scores_moves.values())
+            AI_move = [move for move, score in scores_moves.items() if score == max_score][0]
+            #controller.turn = "white"
+            
+            ##controller.flip(AI_move)
+            new = Piece(AIColor, tiles[AI_move].getCenter(), win, AI_move)
+            controller.pieces.append(new)              
+            new.draw()
+            ##controller.pieces.append(new)
+            
+            controller.getSandwiches(AI_move)
+            #controller.changeTurn()
+            tiles[AI_move].occupy(AIColor)
+            ##new = Piece("white", tiles[tile].getCenter(), win, tile)
+            ##controller.pieces.append(new)              
+            ##new.draw()
+            
+            ##max_score = -100000.0
+            ##for score in list(scores_moves.keys()):
+            ##    if score > max_score:
+            ##        max_score = score
+
+            ##AI_move = scores_moves[max_score]
+            
+            AImovex, AImovey = convert(AI_move)
+            gridx = AImovex * 75 + 400
+            gridy = AImovey * 75 + 175
+            print(scores_moves)
+            print(AImovex, AImovey, max_score)
+            controller.changeTurn()
+            #moves = controller.validMoves()
+            movesBlack = getMoves(controller.getPieces(), oppositeColor(AIColor))
+            for move in movesBlack:
+                movex = move[0]
+                movey = move[1]
+                
+                movepos = movey * 8 + movex
+                tiles[movepos].mark()
+  
+            pt = win.getMouse()
+
+
+            for tile in tiles: 
+                if tiles[tile].clicked(pt):
+                    controller.turn = oppositeColor(AIColor)
+                    controller.getSandwiches(tile)
+                    
+                    controller.flip2(tile) 
+                    ## tile2 = 27
+                    ##controller.flip(tile2)
+                    ##new = Piece("black", tiles[tile2].getCenter(), win, tile2)
+                    ##new.draw()
+                    
+                    
+                    #controller.changeTurn()
+                    new = Piece(oppositeColor(AIColor), tiles[tile].getCenter(), win, tile)
+                    controller.pieces.append(new)
+                    tiles[tile].occupy(oppositeColor(AIColor))
+                    #moves = controller.validMoves()
+            
+            controller.unmarkall()
+            
+            if quitButton.clicked(pt): break
+
+            discs += 1
+
             
 
 if __name__ == "__main__":
