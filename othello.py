@@ -60,6 +60,12 @@ def run():
     gameTitle.setStyle("bold")
     gameTitle.draw(win)
     
+    # Add AI status below the title
+    AIColor = "white"  # We'll define AIColor earlier for use in this text
+    AIText = Text(Point(650, 130), f"AI is playing: {AIColor.capitalize()}")
+    AIText.setSize(18)
+    AIText.draw(win)
+    
     # Add current move indicator below the board
     moveText = Text(Point(650, 800), "Current Move: Black")
     moveText.setSize(18)
@@ -80,7 +86,6 @@ def run():
     controller.turn = "black"
     # while loop
     discs = 4
-    AIColor = "white"
     if AIColor == "white":
         while True: 
             pt = win.getMouse()
