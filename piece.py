@@ -7,13 +7,28 @@ Keeps getting renamed to `Piece.py` and I can't find the swapfile
 from graphics import Point, Image 
 
 class Piece:
+    """
+    Represents a game piece (disc) in Othello.
+    
+    This class manages both the visual representation and logical properties
+    of an Othello disc, including its color, position, and methods to flip it.
+    """
     def __init__(self, color: str, position, win, pos) -> None:
+        """
+        Initialize a new Othello piece.
+        
+        Args:
+            color: The color of the piece ('white' or 'black')
+            position: The (x,y) pixel coordinates for drawing
+            win: The GraphWin window to draw in
+            pos: The logical board position (0-63)
+        """
         # Display attributes
         self.color = color
         self.path = None
         self.win = win
         self.pos = pos
-        self.y, self.x = self.convert(pos)
+        self.y, self.x = self.convert(pos)  # Convert board position to row, col
         if self.color == 'white': 
             self.path = "white-tile.png"
         elif self.color == 'black': 
@@ -24,39 +39,86 @@ class Piece:
         self.image = Image(self.position, self.path)
 
     def draw(self):
+        """Draw the piece on the game window."""
         self.image.draw(self.win)
         
     def undraw(self):
+        """Remove the piece from the game window."""
         self.image.undraw()
 
     # accessors
     def convert(self, number):
+        """
+        Convert a board position (0-63) to row and column coordinates.
+        
+        Args:
+            number: Board position from 0-63
+            
+        Returns:
+            Tuple of (row, column)
+        """
         row = number // 8
         col = number - 8 * row
         return row, col
 
     def grid_to_board_x(self, coord):
+        """
+        Convert a pixel x-coordinate to a board column.
+        
+        Args:
+            coord: Pixel x-coordinate
+            
+        Returns:
+            Board column (0-7)
+        """
         return (coord - 400) // 75
 
     def grid_to_board_y(self, coord):
+        """
+        Convert a pixel y-coordinate to a board row.
+        
+        Args:
+            coord: Pixel y-coordinate
+            
+        Returns:
+            Board row (0-7)
+        """
         return (coord - 175) // 75
 
     def coord_to_pos(self, x, y):
+        """
+        Convert board coordinates to a board position.
+        
+        Args:
+            x: Board column (0-7)
+            y: Board row (0-7)
+            
+        Returns:
+            Board position (0-63)
+        """
         return 8*y + x
     
     def getColor(self) -> str: 
+        """Return the current color of the piece."""
         return self.color
 
     def getPosition(self) -> tuple:  
+        """Return the pixel coordinates of the piece."""
         return (self.position.getX(), self.position.getY())
 
     def getX(self):
+        """Return the column (0-7) of the piece on the board."""
         return self.x
 
     def getY(self):
+        """Return the row (0-7) of the piece on the board."""
         return self.y
 
     def flipColor(self):
+        """
+        Flip the piece to the opposite color and redraw it.
+        This is used when a piece is captured during gameplay.
+        """
         if self.color == "white":
             self.color = 'black'
             self.path = "black-tile.png"
@@ -69,6 +131,10 @@ class Piece:
         self.image.draw(self.win)
 
     def flipColorNoChange(self):
+        """
+        Flip the piece color in memory without redrawing.
+        This is useful for simulating moves without visual changes.
+        """
         if self.color == "white":
             self.color = 'black'
             self.path = "black-tile.png"

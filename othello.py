@@ -11,17 +11,41 @@ from button import Button
 from OthelloAI import *
 
 def convert(number):
+    """
+    Convert a board position index to row and column coordinates.
+    
+    Args:
+        number: Board position index (0-63)
+        
+    Returns:
+        Tuple of (row, column)
+    """
     row = number // 8
     col = number - 8 * row
     return row, col
 
 def oppositeColor(color):
+    """
+    Get the opposite color of the given color.
+    
+    Args:
+        color: 'black' or 'white'
+        
+    Returns:
+        The opposite color ('white' if input is 'black', 'black' if input is 'white')
+    """
     if color == "black":
         return "white"
     else:
         return "black"
     
 def run(): 
+    """
+    Main function to run the Othello game.
+    
+    This function creates the game window, initializes the board, and
+    contains the main game loop handling player moves and AI responses.
+    """
     # setup
     win = GraphWin("Othello", 1300,875)
     board = Grid(win)
@@ -33,12 +57,12 @@ def run():
     #w = weighted_score(2, 3, controller.getPieces(), 4, "black", win)
     # while loop
     discs = 4
-    AIColor = "black"
+    AIColor = "white"
     if AIColor == "white":
         while True: 
             pt = win.getMouse()
 
-
+            # Process human player's move
             for tile in tiles: 
                 if tiles[tile].clicked(pt):
                     controller.turn = oppositeColor(AIColor)
@@ -115,6 +139,7 @@ def run():
             discs += 1
     else:
         while True: 
+            # AI's turn first (black plays first in Othello)
             controller.turn = AIColor
             scores_moves = {}
             movesNew = getMoves(controller.getPieces(), AIColor)
@@ -168,8 +193,8 @@ def run():
                 movepos = movey * 8 + movex
                 tiles[movepos].mark()
   
+            # Human player's turn
             pt = win.getMouse()
-
 
             for tile in tiles: 
                 if tiles[tile].clicked(pt):
