@@ -33,6 +33,8 @@ class Cell():
         self.resident = None
 
         self.win = win
+        
+        self.marked: bool = False
 
 
 
@@ -53,31 +55,30 @@ class Cell():
     # mutators 
 
     def mark(self) -> None :    
+        if self.marked == False:
 
-        self.outerRing = Circle(Point(self.center[0], self.center[1]), self.HEIGHT - 40)
+            self.outerRing = Circle(Point(self.center[0], self.center[1]), self.HEIGHT - 40)
 
-        self.outerRing.setOutline("#a0acb1") 
+            self.outerRing.setOutline("#a0acb1") 
 
-        self.innerRing = Circle(Point(self.center[0], self.center[1]), self.HEIGHT - 41)
+            self.innerRing = Circle(Point(self.center[0], self.center[1]), self.HEIGHT - 41)
 
-        self.innerRing.setOutline("#a0acb1") 
-
-
-
+            self.innerRing.setOutline("#a0acb1") 
 
 
-        self.outerRing.draw(self.win)
+            self.outerRing.draw(self.win)
 
-        self.innerRing.draw(self.win)
+            self.innerRing.draw(self.win)
+            self.marked = True
 
 
 
     def unmark(self) -> None:
+        if self.marked == True:
+            self.outerRing.undraw()
 
-        self.outerRing.undraw()
-
-        self.innerRing.undraw()
-
+            self.innerRing.undraw()
+            self.marked = False
 
 
     def occupy(self, color) -> bool: 
@@ -307,7 +308,9 @@ class Controller():
 
             self.tiles[cell].occupy(piece.getColor())
 
-
+    def unmarkall(self) -> None:
+        for tile in self.tiles:
+            self.tiles[tile].unmark()
 
     def validMoves(self) -> tuple: 
 

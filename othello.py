@@ -29,6 +29,8 @@ def run():
     discs = 4
     while True: 
         pt = win.getMouse()
+
+
         for tile in tiles: 
             if tiles[tile].clicked(pt):
                 controller.turn = "black"
@@ -47,6 +49,7 @@ def run():
                 tiles[tile].occupy("black")
                 #moves = controller.validMoves()
         
+        controller.unmarkall()
         scores_moves = {}
         movesNew = getMoves(controller.getPieces(), "white")
         
@@ -55,10 +58,10 @@ def run():
             movex = move[0]
             movey = move[1]
             
-            move = movey * 8 + movex
+            movepos = movey * 8 + movex
             print(movex, movey)
             w = weighted_score(movex, movey, controller.getPieces(), discs, "white", win) 
-            scores_moves[move] = w
+            scores_moves[movepos] = w
             
         max_score = max(scores_moves.values())
         AI_move = [move for move, score in scores_moves.items() if score == max_score][0]
@@ -89,6 +92,15 @@ def run():
         gridy = AImovey * 75 + 175
         print(scores_moves)
         print(AImovex, AImovey, max_score)
+        
+        #moves = controller.validMoves()
+        movesBlack = getMoves(controller.getPieces(), "black")
+        for move in movesBlack:
+            movex = move[0]
+            movey = move[1]
+            
+            movepos = movey * 8 + movex
+            tiles[movepos].mark()
         
         if quitButton.clicked(pt): break
 
