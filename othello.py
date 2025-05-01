@@ -61,7 +61,9 @@ def run():
     gameTitle.draw(win)
     
     # Add AI status below the title
-    AIColor = "white"  # We'll define AIColor earlier for use in this text
+    #AIColor = "white" 
+    AIColor = "black" 
+     
     AIText = Text(Point(650, 130), f"AI is playing: {AIColor.capitalize()}")
     AIText.setSize(18)
     AIText.draw(win)
@@ -83,7 +85,7 @@ def run():
     
     controller.validMoves()
     # Set initial turn to black (since black plays first in Othello)
-    controller.turn = "black"
+    controller.turn = oppositeColor(AIColor)
     # while loop
     discs = 4
     if AIColor == "white":
@@ -295,6 +297,7 @@ def run():
                     controller.flip2(tile) 
                     
                     new = Piece(oppositeColor(AIColor), tiles[tile].getCenter(), win, tile)
+                    new.draw()
                     controller.pieces.append(new)
                     tiles[tile].occupy(oppositeColor(AIColor))
                     
