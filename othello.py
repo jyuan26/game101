@@ -79,6 +79,11 @@ def run():
     if AIColor == "white":
         while True: 
             pt = win.getMouse()
+            
+            # Check for quit button press immediately
+            if quitButton.clicked(pt): 
+                win.close()
+                return
 
             # Process human player's move
             for tile in tiles: 
@@ -105,6 +110,12 @@ def run():
             statusText.setText(f"Status: Total: {total_calcs}, Current: 0")
             win.update()
             
+            # Check for quit button click before calculations
+            click = win.checkMouse()
+            if click is not None and quitButton.clicked(click):
+                win.close()
+                return
+                
             for i, move in enumerate(movesNew):
                 movex = move[0]
                 movey = move[1]
@@ -116,9 +127,21 @@ def run():
                 statusText.setText(f"Status: Total: {total_calcs}, Current: {i+1}")
                 win.update()
                 
+                # Check for quit button click during calculations
+                click = win.checkMouse()
+                if click is not None and quitButton.clicked(click):
+                    win.close()
+                    return
+                
                 w = weighted_score(movex, movey, controller.getPieces(), discs, AIColor, win) 
                 scores_moves[movepos] = w
             
+            # Another check after calculations complete
+            click = win.checkMouse()
+            if click is not None and quitButton.clicked(click):
+                win.close()
+                return
+                
             # Clear status text after calculations
             statusText.setText("")
             
@@ -150,7 +173,9 @@ def run():
                 movepos = movey * 8 + movex
                 tiles[movepos].mark()
             
-            if quitButton.clicked(pt): break
+            if quitButton.clicked(pt): 
+                win.close()
+                return
 
             discs += 1
     else:
@@ -165,6 +190,12 @@ def run():
             statusText.setText(f"Status: Total: {total_calcs}, Current: 0")
             win.update()
             
+            # Check for quit button click before calculations
+            click = win.checkMouse()
+            if click is not None and quitButton.clicked(click):
+                win.close()
+                return
+                
             for i, move in enumerate(movesNew):
                 movex = move[0]
                 movey = move[1]
@@ -176,9 +207,21 @@ def run():
                 statusText.setText(f"Status: Total: {total_calcs}, Current: {i+1}")
                 win.update()
                 
+                # Check for quit button click during calculations
+                click = win.checkMouse()
+                if click is not None and quitButton.clicked(click):
+                    win.close()
+                    return
+                
                 w = weighted_score(movex, movey, controller.getPieces(), discs, AIColor, win) 
                 scores_moves[movepos] = w
             
+            # Another check after calculations are complete
+            click = win.checkMouse()
+            if click is not None and quitButton.clicked(click):
+                win.close()
+                return
+                
             # Clear status text after calculations
             statusText.setText("")
             
@@ -212,6 +255,11 @@ def run():
   
             # Human player's turn
             pt = win.getMouse()
+            
+            # Check for quit button press immediately
+            if quitButton.clicked(pt): 
+                win.close()
+                return
 
             for tile in tiles: 
                 if tiles[tile].clicked(pt):
@@ -229,7 +277,9 @@ def run():
             
             controller.unmarkall()
             
-            if quitButton.clicked(pt): break
+            if quitButton.clicked(pt): 
+                win.close()
+                return
 
             discs += 1
 
