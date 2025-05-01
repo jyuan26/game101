@@ -60,7 +60,19 @@ def run():
     gameTitle.setStyle("bold")
     gameTitle.draw(win)
     
+    # Add current move indicator below the board
+    moveText = Text(Point(650, 800), "Current Move: Black")
+    moveText.setSize(18)
+    moveText.draw(win)
+    
+    # Add AI calculation status text
+    statusText = Text(Point(650, 830), "")
+    statusText.setSize(14)
+    statusText.draw(win)
+    
     controller.validMoves()
+    # Set initial turn to black (since black plays first in Othello)
+    controller.turn = "black"
     # while loop
     discs = 4
     AIColor = "white"
@@ -80,20 +92,36 @@ def run():
                     new = Piece(oppositeColor(AIColor), tiles[tile].getCenter(), win, tile)
                     controller.pieces.append(new)
                     tiles[tile].occupy(oppositeColor(AIColor))
+                    
+                    # Update move text after human's move
+                    moveText.setText(f"Current Move: {controller.turn.capitalize()}")
             
             controller.unmarkall()
             scores_moves = {}
             movesNew = getMoves(controller.getPieces(), AIColor)
             
-            for move in movesNew:
+            # Show total calculations to be done
+            total_calcs = len(movesNew)
+            statusText.setText(f"Status: Total: {total_calcs}, Current: 0")
+            win.update()
+            
+            for i, move in enumerate(movesNew):
                 movex = move[0]
                 movey = move[1]
                 
                 movepos = movey * 8 + movex
                 print(movex, movey)
+                
+                # Update calculation status
+                statusText.setText(f"Status: Total: {total_calcs}, Current: {i+1}")
+                win.update()
+                
                 w = weighted_score(movex, movey, controller.getPieces(), discs, AIColor, win) 
                 scores_moves[movepos] = w
-                
+            
+            # Clear status text after calculations
+            statusText.setText("")
+            
             max_score = max(scores_moves.values())
             AI_move = [move for move, score in scores_moves.items() if score == max_score][0]
             
@@ -104,6 +132,9 @@ def run():
             controller.getSandwiches(AI_move)
             controller.changeTurn()
             tiles[AI_move].occupy(AIColor)
+            
+            # Update move text after AI's move
+            moveText.setText(f"Current Move: {controller.turn.capitalize()}")
             
             AImovex, AImovey = convert(AI_move)
             gridx = AImovex * 75 + 400
@@ -129,15 +160,28 @@ def run():
             scores_moves = {}
             movesNew = getMoves(controller.getPieces(), AIColor)
             
-            for move in movesNew:
+            # Show total calculations to be done
+            total_calcs = len(movesNew)
+            statusText.setText(f"Status: Total: {total_calcs}, Current: 0")
+            win.update()
+            
+            for i, move in enumerate(movesNew):
                 movex = move[0]
                 movey = move[1]
                 
                 movepos = movey * 8 + movex
                 print(movex, movey)
+                
+                # Update calculation status
+                statusText.setText(f"Status: Total: {total_calcs}, Current: {i+1}")
+                win.update()
+                
                 w = weighted_score(movex, movey, controller.getPieces(), discs, AIColor, win) 
                 scores_moves[movepos] = w
-                
+            
+            # Clear status text after calculations
+            statusText.setText("")
+            
             max_score = max(scores_moves.values())
             AI_move = [move for move, score in scores_moves.items() if score == max_score][0]
             
@@ -147,6 +191,9 @@ def run():
             
             controller.getSandwiches(AI_move)
             tiles[AI_move].occupy(AIColor)
+            
+            # Update move text after AI's move
+            moveText.setText(f"Current Move: {controller.turn.capitalize()}")
             
             AImovex, AImovey = convert(AI_move)
             gridx = AImovex * 75 + 400
@@ -176,6 +223,9 @@ def run():
                     new = Piece(oppositeColor(AIColor), tiles[tile].getCenter(), win, tile)
                     controller.pieces.append(new)
                     tiles[tile].occupy(oppositeColor(AIColor))
+                    
+                    # Update move text after human's move
+                    moveText.setText(f"Current Move: {controller.turn.capitalize()}")
             
             controller.unmarkall()
             
