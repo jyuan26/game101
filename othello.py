@@ -6,7 +6,7 @@ Othello main
 
 from piece import Piece 
 from grid import Cell, Grid, Controller
-from graphics import GraphWin, Point
+from graphics import GraphWin, Point, Text
 from button import Button 
 from OthelloAI import *
 
@@ -53,6 +53,13 @@ def run():
     controller = Controller(tiles, win)
     quitButton = Button(Point(100,700), 75, 50, "Quit") 
     quitButton.draw(win)
+    
+    # Add game title above the board
+    gameTitle = Text(Point(650, 100), "Game: Othello")
+    gameTitle.setSize(24)
+    gameTitle.setStyle("bold")
+    gameTitle.draw(win)
+    
     controller.validMoves()
     # while loop
     discs = 4
