@@ -70,6 +70,11 @@ def run():
     statusText.setSize(14)
     statusText.draw(win)
     
+    # Add mouse click position display
+    clickPosText = Text(Point(650, 860), "")
+    clickPosText.setSize(14)
+    clickPosText.draw(win)
+    
     controller.validMoves()
     # Set initial turn to black (since black plays first in Othello)
     controller.turn = "black"
@@ -79,6 +84,10 @@ def run():
     if AIColor == "white":
         while True: 
             pt = win.getMouse()
+            
+            # Display mouse click position
+            clickX, clickY = pt.getX(), pt.getY()
+            clickPosText.setText(f"Mouse Clicked Position: {int(clickX)}, {int(clickY)}")
             
             # Check for quit button press immediately
             if quitButton.clicked(pt): 
@@ -255,6 +264,10 @@ def run():
   
             # Human player's turn
             pt = win.getMouse()
+            
+            # Display mouse click position
+            clickX, clickY = pt.getX(), pt.getY()
+            clickPosText.setText(f"Mouse Clicked Position: {int(clickX)}, {int(clickY)}")
             
             # Check for quit button press immediately
             if quitButton.clicked(pt): 
