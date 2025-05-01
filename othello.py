@@ -48,6 +48,7 @@ def run():
     """
     # setup
     win = GraphWin("Othello", 1300,875)
+    win.setBackground("white")
     board = Grid(win)
     tiles = board.getTiles()
     controller = Controller(tiles, win)
@@ -68,20 +69,20 @@ def run():
     AIText.setSize(18)
     AIText.draw(win)
     
-    # Add current move indicator below the board
-    moveText = Text(Point(650, 800), "Current Move: Black")
-    moveText.setSize(18)
-    moveText.draw(win)
-    
     # Add AI calculation status text
-    statusText = Text(Point(650, 830), "")
+    statusText = Text(Point(650, 760), "")
     statusText.setSize(14)
     statusText.draw(win)
     
     # Add mouse click position display
-    clickPosText = Text(Point(650, 860), "")
+    clickPosText = Text(Point(650, 780), "")
     clickPosText.setSize(14)
     clickPosText.draw(win)
+    
+    # Add current move indicator below the board
+    moveText = Text(Point(650, 800), "Current Move: Black")
+    moveText.setSize(18)
+    moveText.draw(win)
     
     controller.validMoves()
     # Set initial turn to black (since black plays first in Othello)
